@@ -3,7 +3,7 @@
     "description": "Flexible Excel import module for Kunstmaan Bundles CMS",
     "type": "library",
     "require": {
-        "kunstmaan/bundles-cms": "3.5"
+        "kunstmaan/bundles-cms": "~3.5"
     },
     "autoload": {
         "psr-4": {
