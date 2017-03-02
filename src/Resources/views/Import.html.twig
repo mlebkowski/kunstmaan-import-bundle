@@ -1,0 +1,53 @@
+{% extends "@KunstmaanAdmin/Default/layout.html.twig" %}
+
+{% block admin_page_title %}
+    <div class="col-sm-6 col-md-8">
+        <h1 class="app__content__header__title">
+            {{ "nassau.import.title"|trans({"%date%": import.createdAt|date('Y-m-d H:i:s') }) }}
+        </h1>
+    </div>
+{% endblock %}
+
+{% block messages %}
+    {% if import.errors|length and app.request.query.get('errors') %}
+        <h2>{{ 'nassau.import.has_errors'|trans }}</h2>
+        {% for error in import.errors %}
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="fa fa-times"></i>
+                </button>
+                {{ ('nassau.import.error.' ~ error.error) | trans(error.parameters) }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <fieldset class="form__fieldset--padded">
+        <div class="row"><div class="col-md-3">
+        <div class="progress">
+            <div class="progress-bar{% if percentage >= 100 %} progress-bar-success{% elseif percentage < 25 %} progress-bar-danger{% endif %}"
+                 role="progressbar" aria-valuenow="{{ max(25, percentage) }}" aria-valuemin="0"
+                 aria-valuemax="100" style="width: {{ max(25, percentage) }}%;">
+                {{ percentage }}% {% if all %}{{ 'nassau.import.progress'|trans({"%saved%": saved, "%all%": all}) }}{% endif %}
+            </div>
+        </div>
+        </div></div>
+    </fieldset>
+
+    {% if form %}
+        <h3>{{ 'nassau.import.fix_errors_cta'|trans }}</h3>
+        {% for error in next.errors %}
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="fa fa-times"></i>
+                </button>
+                {{ error.messageTemplate | trans(error.parameters) }}
+            </div>
+        {% endfor %}
+
+        {% form_theme form '@KunstmaanAdmin/Form/fields.html.twig' %}
+        {{ form(form) }}
+    {% endif %}
+{% endblock %}

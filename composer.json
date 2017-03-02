@@ -1,0 +1,20 @@
+{
+    "name": "nassau/kunstmaan-import-bundle",
+    "description": "Flexible Excel import module for Kunstmaan Bundles CMS",
+    "type": "library",
+    "require": {
+        "kunstmaan/bundles-cms": "3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nassau\\KunstmaanImportBundle\\": "src"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maciej Łebkowski",
+            "email": "m.lebkowski@gmail.com"
+        }
+    ]
+}

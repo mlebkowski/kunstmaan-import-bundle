@@ -1,0 +1,22 @@
+nassau:
+  import:
+    title: Imported at %date%
+    has_errors: Imported with errors
+
+    progress: '(imported %saved% of %all%)'
+    fix_errors_cta: 'Fix errors and continue'
+
+    button:
+      save: Save
+      skip: Skip (don’t import)
+
+    error:
+      unrecognized_attribute: Unknown attribute %label% in column %idx%
+      value_format: There was a problem formatting %attribute% attribute for %id% object (%error%)
+      write: There was a problem saving %attribute% attribute for %id% object (%error%)
+
+    flash:
+      skipped: 'Object skipped'
+      saved: 'Object saved'
+      successfull_import: 'File imported correctly'
+      import_errors: 'File imported with errors.  Please review and fix the data to finish the process'

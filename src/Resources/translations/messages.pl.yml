@@ -1,0 +1,22 @@
+nassau:
+  import:
+    title: Import z dnia %date%
+    has_errors: Import zawierał błędy
+
+    progress: '(zaimportowane %saved% z %all%)'
+    fix_errors_cta: 'Popraw błędy i dokończ import'
+
+    button:
+      save: Zapisz
+      skip: Pomiń i nie importuj
+
+    error:
+      unrecognized_attribute: Nieznany atrybut %label% w kolumnie %idx%
+      value_format: Nie udało się sformatować wartości atrybutu %attribute% dla obiektu %id% (%error%)
+      write: Nie udało się zapisać wartości atrybutu %attribute% dla obiektu %id% (%error%)
+
+    flash:
+      skipped: 'Import pominięty'
+      saved: 'Obiekt zapisany'
+      successfull_import: 'Plik został zaimportowany pomyślnie'
+      import_errors: 'Plik został zaimportowany z błędami. Po ostatecznych poprawkach należy zapisać formularz'

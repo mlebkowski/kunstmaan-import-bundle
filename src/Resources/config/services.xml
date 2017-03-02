@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="nassau.kunstmaan_import.import_wizard_action.class">Nassau\KunstmaanImportBundle\Services\ImportWizardAction</parameter>
+        <parameter key="nassau.kunstmaan_import.strategy_handler.class">Nassau\KunstmaanImportBundle\Import\StrategyHandler</parameter>
+        <parameter key="nassau.kunstmaan_import.import.zip.media_uploader.class">Nassau\KunstmaanImportBundle\Import\Zip\MediaUploader</parameter>
+        <parameter key="nassau.kunstmaan_import.import.excel_reader.class">Box\Spout\Reader\XLSX\Reader</parameter>
+        <parameter key="nassau.kunstmaan_import.import.spreadsheet.row_iterator.strategy.class">Nassau\KunstmaanImportBundle\Import\Spreadsheet\RowIterator\StrategyRowIteratorFactory</parameter>
+        <parameter key="nassau.kunstmaan_import.hydrator.entity_matcher.class">Nassau\KunstmaanImportBundle\Hydrator\EntityMatcher</parameter>
+        <parameter key="nassau.kunstmaan_import.hydrator.attributes_formatter.class">Nassau\KunstmaanImportBundle\Hydrator\Attributes\Formatter\StrategyFormatter</parameter>
+        <parameter key="nassau.kunstmaan_import.hydrator.attributes_writer.class">Nassau\KunstmaanImportBundle\Hydrator\Attributes\Writer\DefaultWriter</parameter>
+
+        <parameter key="nassau.kunstmaan_import.formatter.boolean.falsy_values" type="collection">
+            <parameter>0</parameter>
+            <parameter>no</parameter>
+            <parameter>false</parameter>
+        </parameter>
+    </parameters>
+
+    <services>
+
+        <service class="%nassau.kunstmaan_import.import_wizard_action.class%" id="nassau.kunstmaan_import.import_wizard_action">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="nassau.kunstmaan_import.strategy_handler" type="service"/>
+            <argument id="form.factory" type="service"/>
+        </service>
+
+        <service class="%nassau.kunstmaan_import.strategy_handler.class%" id="nassau.kunstmaan_import.strategy_handler">
+            <argument id="nassau.kunstmaan_import.strategy_handler.collection" type="service"/>
+        </service>
+
+        <service class="ArrayObject" id="nassau.kunstmaan_import.strategy_handler.collection" public="false">
+            <tag
+                    name="nassau.registry"
+                    tag="kunstmaan_import.handler"
+                    method="offsetSet"
+                    order="indexed"
+                    alias_field="type"
+                    class="Nassau\KunstmaanImportBundle\Import\ImportHandlerInterface"
+            />
+        </service>
+
+
+        <service class="%nassau.kunstmaan_import.import.zip.media_uploader.class%" id="nassau.kunstmaan_import.import.zip.media_uploader" public="false">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+        </service>
+
+        <service class="%nassau.kunstmaan_import.hydrator.entity_matcher.class%" id="nassau.kunstmaan_import.hydrator.entity_matcher" public="false">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+        </service>
+
+
+        <service class="%nassau.kunstmaan_import.import.excel_reader.class%" id="nassau.kunstmaan_import.import.excel_reader" public="false">
+            <call method="setGlobalFunctionsHelper">
+                <argument id="nassau.kunstmaan_import.import.excel_reader.global_functions_helper" type="service"/>
+            </call>
+        </service>
+
+        <service class="Box\Spout\Common\Helper\GlobalFunctionsHelper" id="nassau.kunstmaan_import.import.excel_reader.global_functions_helper" public="false" />
+        
+        <service class="ArrayObject" id="nassau.kunstmaan_import.import.spreadsheet.row_iterator.collection" public="false">
+            <tag
+                    name="nassau.registry"
+                    tag="kunstmaan_import.row_iterator"
+                    order="indexed"
+                    method="offsetSet"
+                    class="Nassau\KunstmaanImportBundle\Import\Spreadsheet\RowIterator\RowIteratorFactory"
+            />
+        </service>
+
+        <service class="Nassau\KunstmaanImportBundle\Import\Spreadsheet\RowIterator\IdentityRowIteratorFactory" id="nassau.kunstmaan_import.import.spreadsheet.row_iterator.identity_row_iterator_factory" public="false">
+            <tag name="kunstmaan_import.row_iterator" alias="rows"/>
+        </service>
+        <service class="Nassau\KunstmaanImportBundle\Import\Spreadsheet\RowIterator\InversedRowIteratorFactory" id="nassau.kunstmaan_import.import.spreadsheet.row_iterator.inversed_row_iterator_factory" public="false">
+            <tag name="kunstmaan_import.row_iterator" alias="columns"/>
+        </service>
+
+
+        <service class="ArrayObject" id="nassau.kunstmaan_import.post_processor.collection" public="false">
+            <tag
+                    name="nassau.registry"
+                    tag="kunstmaan_import.post_processor"
+                    order="indexed"
+                    method="offsetSet"
+                    class="Nassau\KunstmaanImportBundle\Process\PostProcessorInterface"
+            />
+        </service>
+
+        <service class="%nassau.kunstmaan_import.hydrator.attributes_writer.class%" id="nassau.kunstmaan_import.hydrator.attributes_writer" public="false">
+            <argument id="property_accessor" type="service"/>
+        </service>
+
+        <service class="%nassau.kunstmaan_import.hydrator.attributes_formatter.class%" id="nassau.kunstmaan_import.hydrator.attributes_formatter" public="false">
+            <argument id="nassau.kunstmaan_import.hydrator.attributes_formatter.collection" type="service"/>
+        </service>
+
+        <service class="ArrayObject" id="nassau.kunstmaan_import.hydrator.attributes_formatter.collection" public="false">
+            <tag
+                    name="nassau.registry"
+                    tag="kunstmaan_import.formatter"
+                    order="indexed"
+                    method="offsetSet"
+                    class="Nassau\KunstmaanImportBundle\Hydrator\Attributes\Formatter\AttributeFormatter"
+            />
+        </service>
+
+        <service class="Nassau\KunstmaanImportBundle\Hydrator\Attributes\Formatter\BooleanFormatter" id="nassau.kunstmaan_import.hydrator.attributes_formatter.boolean" public="false">
+            <argument>%nassau.kunstmaan_import.formatter.boolean.falsy_values%</argument>
+            <tag name="kunstmaan_import.formatter" alias="boolean"/>
+        </service>
+
+        <service class="Nassau\KunstmaanImportBundle\Hydrator\Attributes\Formatter\MediaFormatter" id="nassau.kunstmaan_import.hydrator_attributes_formatter.media" public="false">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <tag name="kunstmaan_import.formatter" alias="media" />
+        </service>
+
+
+    </services>
+</container>
